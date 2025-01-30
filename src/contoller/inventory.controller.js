@@ -53,7 +53,8 @@ const getAllProducts = asyncHandler(
     async (req,res) => {
         let allProduct  =await Product.find({})
        for(let i=0;i<allProduct.length;i++) {
-            allProduct[i]["id"]=allProduct[i]._id
+            allProduct[i]["id"]=allProduct[i]._id.toString();
+            delete allProduct[i]["_id"];
        }
 console.log(allProduct)
        if(!allProduct){
