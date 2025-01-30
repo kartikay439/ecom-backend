@@ -52,9 +52,8 @@ throw new ApiError(400,"All fileds reuqired");
 const getAllProducts = asyncHandler(
     async (req,res) => {
         let allProduct  =await Product.find({})
-       for (let product of allProduct) {
-           product.id = product._id
-           delete product._id
+       for(let i=0;i<allProduct.length;i++) {
+            allProduct[i]["id"]=allProduct[i]._id
        }
 console.log(allProduct)
        if(!allProduct){
