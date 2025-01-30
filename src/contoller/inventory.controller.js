@@ -51,7 +51,7 @@ throw new ApiError(400,"All fileds reuqired");
 
 const getAllProducts = asyncHandler(
     async (req,res) => {
-        let allProduct  =await Product.find({}).count()
+        let allProduct  =await Product.find({})
         allProduct = allProduct.map(
             product => {
                 product.id = product._id
