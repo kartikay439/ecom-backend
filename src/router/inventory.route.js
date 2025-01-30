@@ -1,5 +1,5 @@
 import { Router } from "express";
- import { addProduct ,getAllProducts} from "../contoller/product.controller.js";
+ import { addProduct ,getAllProducts} from "../contoller/inventory.controller.js";
  import {upload} from '../middleware/multer.middleware.js'
 
   const router = new Router()

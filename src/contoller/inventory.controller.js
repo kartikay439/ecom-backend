@@ -6,7 +6,7 @@ import {uploadOnCLoudinary} from '../utils/cloudinary.service.js'
 
 
 import mongoose from "mongoose";
-import { Product } from "../models/product.model.js";
+import { Product } from "../models/inventory.model.js";
 
 
 const addProduct = asyncHandler(

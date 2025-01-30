@@ -1,10 +1,14 @@
 import { Router } from "express";
-import { loginUser, logOutUser, registerUser ,refreshAcessToken} from "../contoller/user.controller.js";
+import { signUpWithNumber,loginUser, logOutUser, registerUser} from "../contoller/buyer.controller.js";
 import {upload} from '../middleware/multer.middleware.js'
 import {verifyJWT} from '../middleware/auth.middleware.js'
 
 
 const router = Router()
+
+router.route("/signUpWithMobile").post(
+    signUpWithNumber
+)
 
 
 router.route("/register").post(
@@ -28,7 +32,7 @@ router.route("/home").get(
 )
 //secured routes
 router.route("/logout").post(verifyJWT,logOutUser)
-router.route("/refresh-token").post(refreshAcessToken)
+// router.route("/refresh-token").post(refreshAcessToken)
 
 
 

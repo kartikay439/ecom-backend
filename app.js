@@ -19,13 +19,13 @@ app.use(express.urlencoded({
 app.use(cookieParser())
 
 // Routes import
-import userRouter from './src/router/user.route.js'
+import userRouter from './src/router/buyer.route.js'
 
 //routes declaration
 app.use("/api/v1/user",userRouter)
 
 //product route
-import productRoute from './src/router/product.route.js'
+import productRoute from './src/router/inventory.route.js'
 app.use("/api/v1/product",productRoute);
 
 import paymentsRoute from './src/router/payment.routes.js'
@@ -33,5 +33,9 @@ app.use("/api/v1/payment",paymentsRoute)
 
 import cartRoute from './src/router/cart.router.js'
 app.use("/api/v1/cart",cartRoute)
+
+
+import orderRouter from './src/router/order.route.js'
+app.use("/api/v1/order",orderRouter)
 
 export default app

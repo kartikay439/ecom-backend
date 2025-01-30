@@ -4,6 +4,9 @@ import ApiError from "../utils/ApiError.js";
 import ApiResponse from "../utils/apiResponse.js";
 import mongoose from "mongoose";
 
+//THERE WILL BE A TABLE WHICH WILL HAVE PRODUCT QUANTITY AND PRODUCT ID
+//NOW IF ANYONE WANTS TO ADD PRODUCT IN CART IT WILL BE CHECKED IN INVENTORY
+
 const add = AsyncHandler(
     async (req, res, next) => {
         const product = req.body.product;
@@ -33,7 +36,7 @@ const add = AsyncHandler(
             if (existedCartItem) {
                 await Cart.updateOne(
                     {
-                        userId: userId,
+                        userId: new mongoose.Types.ObjectId(userId),
                         "products.productId": productId
                     },
                     {
