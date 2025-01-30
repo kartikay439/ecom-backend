@@ -10,7 +10,8 @@ import mongoose from "mongoose";
 const add = AsyncHandler(
     async (req, res, next) => {
         const product = req.body.product;
-        const userId = req.body.userId;
+        let userId = req.body.userId;
+        userId =new mongoose.Types.ObjectId(userId);
         console.log(product, userId, "he");
 
         if (!userId || !product) {
@@ -36,7 +37,7 @@ const add = AsyncHandler(
             if (existedCartItem) {
                 await Cart.updateOne(
                     {
-                        userId: new mongoose.Types.ObjectId(userId),
+                        userId: userId,
                         "products.productId": productId
                     },
                     {
