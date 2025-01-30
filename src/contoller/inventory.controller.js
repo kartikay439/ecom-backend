@@ -50,20 +50,26 @@ throw new ApiError(400,"All fileds reuqired");
 )
 
 const getAllProducts = asyncHandler(
-    async (req,res) => {
-        let allProduct  =await Product.find({})
-       for(let i=0;i<allProduct.length;i++) {
-            allProduct[i]["id"]=allProduct[i]._id.toString();
-            delete allProduct[i]["_id"];
-       }
-console.log(allProduct)
-       if(!allProduct){
-            throw new ApiError(400,"Network or Code Error");
+    async (req, res) => {
+        let allProduct = await Product.aggregate([
+            {
+                $project: {
+                    id: { $toString: "$_id" }, // Rename _id to id and convert it to string
+
+                }
+            }
+        ]);
+
+        console.log(allProduct);
+
+        if (!allProduct || allProduct.length === 0) {
+            throw new ApiError(400, "No products found");
         }
 
         console.log("All products are requested");
-       return res.json(allProduct);
+        return res.json(allProduct); // Return the modified array
     }
-)
+);
+
   export {addProduct,getAllProducts}
 
