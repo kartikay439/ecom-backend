@@ -51,14 +51,15 @@ throw new ApiError(400,"All fileds reuqired");
 
 const getAllProducts = asyncHandler(
     async (req,res) => {
-        let allProduct = await Product.find({});
-
-        allProduct = allProduct.map(({ _id, ...product }) => ({
-            ...product,
-            id: _id
-        }));
-
-        console.log(allProduct)
+        let allProduct  =await Product.find({})
+        allProduct = allProduct.map(
+            product => {
+                product["id"] = product._id
+                delete product._id
+                return product
+            }
+        )
+console.log(allProduct)
        if(!allProduct){
             throw new ApiError(400,"Network or Code Error");
         }
