@@ -59,7 +59,7 @@ const getAllProducts = asyncHandler(
                 return product
             }
         )
-
+console.log(allProduct)
        if(!allProduct){
             throw new ApiError(400,"Network or Code Error");
         }
