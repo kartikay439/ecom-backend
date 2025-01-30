@@ -54,8 +54,14 @@ const getAllProducts = asyncHandler(
         let allProduct = await Product.aggregate([
             {
                 $project: {
-                    id: { $toString: "$_id" }, // Rename _id to id and convert it to string
-
+                    id: { $toString: "$_id" },
+                    name:1,
+                    price:1,
+                    category:1,
+                    images:1,
+                    // Rename _id to id and convert it to string
+                    // Keep all other fields as they are
+                    _id: 0  // Exclude the original _id field
                 }
             }
         ]);
@@ -70,6 +76,7 @@ const getAllProducts = asyncHandler(
         return res.json(allProduct); // Return the modified array
     }
 );
+
 
   export {addProduct,getAllProducts}
 
