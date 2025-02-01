@@ -15,15 +15,14 @@ const productSchema = new Schema(
             required: true,
 
         },
-        imagesArray:[
+        imagesArray: [
             {
-             type:{
-                 type: String,
-                 required: true,
-             }
+                type: String,
+                required: true
+
             }
         ],
-        mrp:{
+        mrp: {
             type: Number,
             required: true,
         },
@@ -35,7 +34,7 @@ const productSchema = new Schema(
             type: Number,
         },
         availableUnit: {
-            type:Number
+            type: Number
         },
         sellerId: {
             type: String

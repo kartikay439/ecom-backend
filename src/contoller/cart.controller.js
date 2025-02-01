@@ -3,11 +3,16 @@ import AsyncHandler from "../utils/asyncHandler.js";
 import ApiError from "../utils/ApiError.js";
 import ApiResponse from "../utils/apiResponse.js";
 import mongoose from "mongoose";
+import {Product} from "../models/inventory.model.js";
+import asyncHandler from "../utils/asyncHandler.js";
+import CartModel from "../models/cart.model.js";
 
 //THERE WILL BE A TABLE WHICH WILL HAVE PRODUCT QUANTITY AND PRODUCT ID
 //NOW IF ANYONE WANTS TO ADD PRODUCT IN CART IT WILL BE CHECKED IN INVENTORY
 
-const add = AsyncHandler(
+
+//quantity not working properly****
+const addToCart = AsyncHandler(
     async (req, res, next) => {
         const product = req.body.product;
         let userId = req.body.userId;
@@ -22,7 +27,15 @@ const add = AsyncHandler(
             userId: userId,
         });
 
+
         const productId = new mongoose.Types.ObjectId(product.productId)
+        const productInInventory = await Product.findById(productId)
+        if(productInInventory.availableUnit<=0){
+            throw new ApiError(403, 'Product out of stock');
+        }
+
+        // productInInventory.availableUnit = productInInventory.availableUnit - 1 ;
+        // await productInInventory.save({validateBeforeSave: true})
 
         if (existed_user) {
             const existedCartItem = await Cart.findOne({
@@ -42,7 +55,7 @@ const add = AsyncHandler(
                     },
                     {
                         $set: {
-                            "products.$.quantity": product.quantity + existedCartItem.products[0].quantity,
+                            "products.$.quantity": 1 + existedCartItem.products[0].quantity,
                         }
                     }
                 );
@@ -75,4 +88,26 @@ const add = AsyncHandler(
     }
 );
 
-export {add};
+const fetchCart = asyncHandler(
+    async (req, res, next) => {
+        console.log(req.query);
+        let { userId } = req.query;
+        userId = userId.toString();
+        console.log(userId);
+
+        const cart = await CartModel.find({ userId });
+
+        if (cart.length === 0) {
+            throw new ApiError(403, 'Add item to cart first');
+        }
+
+        console.log(cart);
+
+        res.status(200).json(
+            new ApiResponse(200, cart, "Cart fetched successfully")
+        );
+    }
+);
+
+
+export {addToCart,fetchCart};
