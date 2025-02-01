@@ -59,8 +59,8 @@ const addProduct = asyncHandler(
 
 const getProductById = asyncHandler(async (req, res) => {
     let {productId} = req.query;
-    productId = new mongoose.Types.ObjectId(productId);
-    const product = Product.findById(productId);
+    console.log(productId);
+    const product =await Product.findById({_id:productId});
     if(!product) {
         throw new ApiError(403, "Product not found");
     }
@@ -68,6 +68,8 @@ const getProductById = asyncHandler(async (req, res) => {
         new ApiResponse(200, product, "Product added Successfully")
     )
 })
+
+
 
 const getAllProducts = asyncHandler(
     async (req, res) => {

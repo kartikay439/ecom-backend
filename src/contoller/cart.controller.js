@@ -15,8 +15,9 @@ import CartModel from "../models/cart.model.js";
 const addToCart = AsyncHandler(
     async (req, res, next) => {
         const product = req.body.product;
+        // console.log(product);
         let userId = req.body.userId;
-        userId =new mongoose.Types.ObjectId(userId);
+        // userId = new mongoose.Types.ObjectId(userId);
         console.log(product, userId, "he");
 
         if (!userId || !product) {
@@ -30,7 +31,7 @@ const addToCart = AsyncHandler(
 
         const productId = new mongoose.Types.ObjectId(product.productId)
         const productInInventory = await Product.findById(productId)
-        if(productInInventory.availableUnit<=0){
+        if (productInInventory.availableUnit <= 0) {
             throw new ApiError(403, 'Product out of stock');
         }
 
@@ -88,14 +89,47 @@ const addToCart = AsyncHandler(
     }
 );
 
+const getAllProductInCart = asyncHandler(
+    async (req, res, next) => {
+        const cart = await Cart.aggregate([
+            {
+                $match: { userId: req.query.userId } // Ensure userId is a string in MongoDB
+            },
+            { $unwind: "$products" },
+            // {
+            //     $lookup: {
+            //         from: "products", // MongoDB uses **collection name** (lowercase, plural in most cases)
+            //         localField: "products.productId",
+            //         foreignField: "_id",
+            //         as: "productDetails"
+            //     }
+            // },
+            // { $unwind: "$productDetails" },
+            // {
+            //     $project: {
+            //         "productDetails._id": 1,
+            //         "productDetails.name": 1,
+            //         "productDetails.mrp": 1,
+            //         "products.quantity": 1
+            //     }
+            // }
+        ]);
+
+        console.log(cart)
+
+
+        res.send("hello")
+    }
+)
+
 const fetchCart = asyncHandler(
     async (req, res, next) => {
         console.log(req.query);
-        let { userId } = req.query;
+        let {userId} = req.query;
         userId = userId.toString();
         console.log(userId);
 
-        const cart = await CartModel.find({ userId });
+        const cart = await CartModel.find({userId});
 
         if (cart.length === 0) {
             throw new ApiError(403, 'Add item to cart first');
@@ -110,4 +144,4 @@ const fetchCart = asyncHandler(
 );
 
 
-export {addToCart,fetchCart};
+export {addToCart, fetchCart, getAllProductInCart};

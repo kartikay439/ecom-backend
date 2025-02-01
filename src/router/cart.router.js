@@ -1,5 +1,5 @@
 import {Router} from "express";
-import {addToCart,fetchCart} from "../contoller/cart.controller.js";
+import {addToCart,fetchCart,getAllProductInCart} from "../contoller/cart.controller.js";
 
 const router = Router();
 
@@ -11,5 +11,7 @@ addToCart
 router.route("/fetch").get(
     fetchCart
 )
+
+router.route("/getAll").get(getAllProductInCart)
 
 export default router;
