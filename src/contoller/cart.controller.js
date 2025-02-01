@@ -14,9 +14,9 @@ import CartModel from "../models/cart.model.js";
 //quantity not working properly****
 const addToCart = AsyncHandler(
     async (req, res, next) => {
-        const product = req.body.product;
+        const product = req.body;
         // console.log(product);
-        let userId = req.body.userId;
+        let userId = req.query.userId;
         // userId = new mongoose.Types.ObjectId(userId);
         console.log(product, userId, "he");
 
@@ -93,32 +93,33 @@ const getAllProductInCart = asyncHandler(
     async (req, res, next) => {
         const cart = await Cart.aggregate([
             {
-                $match: { userId: req.query.userId } // Ensure userId is a string in MongoDB
+                $match: { userId: new mongoose.Types.ObjectId(req.query.userId) } // Ensure userId is a string in MongoDB
             },
             { $unwind: "$products" },
-            // {
-            //     $lookup: {
-            //         from: "products", // MongoDB uses **collection name** (lowercase, plural in most cases)
-            //         localField: "products.productId",
-            //         foreignField: "_id",
-            //         as: "productDetails"
-            //     }
-            // },
-            // { $unwind: "$productDetails" },
-            // {
-            //     $project: {
-            //         "productDetails._id": 1,
-            //         "productDetails.name": 1,
-            //         "productDetails.mrp": 1,
-            //         "products.quantity": 1
-            //     }
-            // }
+            {
+                $lookup: {
+                    from: "products", // MongoDB uses **collection name** (lowercase, plural in most cases)
+                    localField: "products.productId",
+                    foreignField: "_id",
+                    as: "productDetails"
+                }
+            },
+            { $unwind: "$productDetails" },
+            {
+                $project: {
+                    "productDetails._id": 1,
+                    "productDetails.name": 1,
+                    "productDetails.mrp": 1,
+                    "productDetails.quantity": 1,
+                    "productDetails.imagesArray": 1,
+                }
+            }
         ]);
 
         console.log(cart)
 
 
-        res.send("hello")
+        res.json(cart);
     }
 )
 
