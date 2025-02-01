@@ -132,7 +132,7 @@ const getAllProductInCart = asyncHandler(
             }
         ]);
 
-        console.log(cart)
+        console.log(cart[0].products)
 
 
         res.json(cart[0].products);
