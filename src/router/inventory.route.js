@@ -1,5 +1,5 @@
 import { Router } from "express";
- import { addProduct ,getAllProducts} from "../contoller/inventory.controller.js";
+ import { addProduct ,getAllProducts,getProductById} from "../contoller/inventory.controller.js";
  import {upload} from '../middleware/multer.middleware.js'
 
   const router = new Router()
@@ -18,5 +18,10 @@ import { Router } from "express";
    router.route("/getAllProduct").get(
     getAllProducts
    );
+
+ router.route("/getProductById").get(
+     getProductById
+ )
+
 
    export default router;

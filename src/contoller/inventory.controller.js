@@ -57,6 +57,18 @@ const addProduct = asyncHandler(
     }
 )
 
+const getProductById = asyncHandler(async (req, res) => {
+    let {productId} = req.query;
+    productId = new mongoose.Types.ObjectId(productId);
+    const product = Product.findById(productId);
+    if(!product) {
+        throw new ApiError(403, "Product not found");
+    }
+    res.status(200).json(
+        new ApiResponse(200, product, "Product added Successfully")
+    )
+})
+
 const getAllProducts = asyncHandler(
     async (req, res) => {
         let allProduct = await Product.aggregate([
@@ -89,5 +101,5 @@ const getAllProducts = asyncHandler(
 );
 
 
-export {addProduct,getAllProducts}
+export {addProduct,getAllProducts,getProductById}
 
