@@ -93,9 +93,9 @@ const getAllProductInCart = asyncHandler(
     async (req, res, next) => {
         const cart = await Cart.aggregate([
             {
-                $match: { userId: new mongoose.Types.ObjectId(req.query.userId) } // Ensure userId is a string in MongoDB
+                $match: {userId: new mongoose.Types.ObjectId(req.query.userId)} // Ensure userId is a string in MongoDB
             },
-            { $unwind: "$products" },
+            {$unwind: "$products"},
             {
                 $lookup: {
                     from: "products", // MongoDB uses **collection name** (lowercase, plural in most cases)
@@ -104,7 +104,7 @@ const getAllProductInCart = asyncHandler(
                     as: "productDetails"
                 }
             },
-            { $unwind: "$productDetails" },
+            {$unwind: "$productDetails"},
             {
                 $project: {
                     "productDetails._id": 1,
@@ -112,6 +112,22 @@ const getAllProductInCart = asyncHandler(
                     "productDetails.mrp": 1,
                     "productDetails.quantity": 1,
                     "productDetails.imagesArray": 1,
+                    "productDetails.discount": 1,
+                    "productDetails.description": 1,
+                    "productDetails.category": 1
+                }
+            },
+            {
+                $group: {
+                    _id: null,
+                    products: { $push: "$productDetails" } // Collect all product details into an array
+                }
+            }
+            ,
+            {
+                $project: {
+                    _id: 0, // Remove outer _id
+                    products: 1 // Return only the products array
                 }
             }
         ]);
@@ -119,7 +135,7 @@ const getAllProductInCart = asyncHandler(
         console.log(cart)
 
 
-        res.json(cart);
+        res.json(cart[0].products);
     }
 )
 
